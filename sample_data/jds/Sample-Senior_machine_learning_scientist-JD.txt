@@ -1,0 +1,18 @@
+Title: Senior Machine Learning Scientist
+
+Company Overview:
+DataMind Labs develops advanced AI systems for recommendation, personalization, and decision automation.
+
+Responsibilities:
+- Lead end-to-end ML projects from data exploration to deployment and A/B testing.
+- Develop and optimize models using deep learning, gradient boosting, and graph-based techniques.
+- Mentor junior data scientists and contribute to model explainability and fairness initiatives.
+- Collaborate cross-functionally with product and engineering teams to define AI-driven features.
+- Publish internal whitepapers and share learnings with the wider AI community.
+
+Requirements:
+- Ph.D. or M.S. in Machine Learning, Statistics, or related quantitative field.
+- 5+ years of experience developing and deploying ML models at scale.
+- Expertise in PyTorch, TensorFlow, and data science libraries (NumPy, Pandas, scikit-learn).
+- Proficiency in SQL and data pipeline orchestration tools (Airflow, Prefect, or similar).
+- Strong background in probability, optimization, and modern neural network architectures.

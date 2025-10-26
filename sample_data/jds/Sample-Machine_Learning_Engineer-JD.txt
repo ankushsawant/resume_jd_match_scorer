@@ -1,0 +1,18 @@
+Title: Machine Learning Engineer
+
+Company Overview:
+InnovateAI is a fast-growing tech company focused on applying AI and data science to enterprise workflows.
+
+Responsibilities:
+- Design, train, and deploy scalable machine learning models for NLP and predictive analytics applications.
+- Collaborate with software engineers to integrate ML models into production systems.
+- Conduct data preprocessing, feature engineering, and model evaluation.
+- Implement best practices in model versioning, reproducibility, and monitoring.
+- Research emerging ML frameworks and tools to enhance our capabilities.
+
+Requirements:
+- Bachelor’s or Master’s degree in Computer Science, Data Science, or related field.
+- Strong proficiency in Python and frameworks like TensorFlow or PyTorch.
+- Experience with cloud ML environments (AWS Sagemaker, GCP Vertex AI, or Azure ML).
+- Solid understanding of data structures, algorithms, and model evaluation techniques.
+- Excellent problem-solving and communication skills.
