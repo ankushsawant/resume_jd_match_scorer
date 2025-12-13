@@ -12,12 +12,24 @@ st.set_page_config(page_title="Resume ↔ JD Match Scorer", page_icon="🤖")
 st.title("🤖 Resume ↔ JD Match Scorer")
 st.write("Instruction: Upload a **resume** (PDF) and a **job description** (TXT) to get a semantic match score.")
 
+# Initialize session state for uploader key
+if 'uploader_key' not in st.session_state:
+    st.session_state.uploader_key = 0
+
 # File size limit (in bytes) - 10MB
 MAX_FILE_SIZE = 10 * 1024 * 1024
 
 # File uploaders
-resume_file = st.file_uploader("Upload Resume (PDF)", type=["pdf"])
-jd_file = st.file_uploader("Upload Job Description (TXT)", type=["txt"])
+resume_file = st.file_uploader(
+    "Upload Resume (PDF)",
+    type=["pdf"],
+    key=f"resume_{st.session_state.uploader_key}"
+)
+jd_file = st.file_uploader(
+    "Upload Job Description (TXT)",
+    type=["txt"],
+    key=f"jd_{st.session_state.uploader_key}"
+)
 
 # Validate and process files
 if resume_file and jd_file:
@@ -135,6 +147,14 @@ if resume_file and jd_file:
             st.metric("Resume Length", f"{len(resume_text.split())} words")
         with col2:
             st.metric("JD Length", f"{len(jd_text.split())} words")
+
+        # Reset button - allows users to start a new comparison
+        st.divider()
+        if st.button("🔄 Reset & Start New Comparison", type="primary", use_container_width=True):
+            # Increment uploader key to force file uploaders to clear
+            st.session_state.uploader_key += 1
+            # Rerun the app
+            st.rerun()
 
     except Exception as e:
         st.error(f"❌ An unexpected error occurred: {str(e)}")
