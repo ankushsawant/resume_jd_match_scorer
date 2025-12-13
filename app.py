@@ -4,7 +4,7 @@ from utils import extract_text_from_pdf, extract_text_from_txt, clean_text, comp
 st.set_page_config(page_title="Resume ↔ JD Match Scorer", page_icon="🤖")
 
 st.title("🤖 Resume ↔ JD Match Scorer")
-st.write("Upload a **resume** (PDF) and a **job description** (TXT) to get a semantic match score.")
+st.write("Instruction: Upload a **resume** (PDF) and a **job description** (TXT) to get a semantic match score.")
 
 resume_file = st.file_uploader("Upload Resume (PDF)", type=["pdf"])
 jd_file = st.file_uploader("Upload Job Description (TXT)", type=["txt"])
