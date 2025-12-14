@@ -25,6 +25,29 @@ A Streamlit app that compares a **resume (PDF)** to a **job description (TXT)** 
 ---
 
 ## ▶️ Run the App
+
+### Option 1: Local Installation
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
+```
+
+### Option 2: Docker
+**Build the image:**
+```bash
+docker build -t resume-jd-matcher .
+```
+
+**Run the container:**
+```bash
+docker run -p 8501:8501 resume-jd-matcher
+```
+
+**Access the app:**
+Open your browser to `http://localhost:8501`
+
+**Stop the container:**
+```bash
+docker ps  # Find container ID
+docker stop <container-id>
+```
