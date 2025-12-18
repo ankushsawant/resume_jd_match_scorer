@@ -6,6 +6,8 @@ Contains all constants and configurable parameters.
 # File Processing Configuration
 MAX_FILE_SIZE: int = 10 * 1024 * 1024  # 10 MB in bytes
 TEXT_PREVIEW_CHAR_LIMIT: int = 1000
+MIN_WORD_COUNT: int = 50  # Minimum words for meaningful analysis
+MIN_CHAR_COUNT: int = 100  # Minimum characters for scanned PDF detection
 
 # NLP Model Configuration
 MODEL_NAME: str = 'all-MiniLM-L6-v2'
