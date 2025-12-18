@@ -1,23 +1,28 @@
+from typing import Any, Optional
+import re
+import logging
+
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import pdfplumber
-import re
-import logging
+
+from config import MODEL_NAME, TEXT_ENCODINGS, TEXT_CLEAN_PATTERN, WHITESPACE_PATTERN
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Load model once globally
+model: Optional[SentenceTransformer] = None
 try:
-    model = SentenceTransformer('all-MiniLM-L6-v2')
+    model = SentenceTransformer(MODEL_NAME)
     logger.info("Model loaded successfully")
 except Exception as e:
     logger.error(f"Failed to load model: {str(e)}")
     model = None
 
 
-def extract_text_from_pdf(file):
+def extract_text_from_pdf(file: Any) -> str:
     """
     Extract text from a PDF file.
 
@@ -56,7 +61,7 @@ def extract_text_from_pdf(file):
         raise Exception(f"Failed to process PDF file: {str(e)}")
 
 
-def clean_text(text):
+def clean_text(text: str) -> str:
     """
     Clean and normalize text.
 
@@ -74,8 +79,8 @@ def clean_text(text):
             raise ValueError("Text must be a non-empty string")
 
         text = text.lower()
-        text = re.sub(r'[^a-z0-9\s]', ' ', text)
-        text = re.sub(r'\s+', ' ', text).strip()
+        text = re.sub(TEXT_CLEAN_PATTERN, ' ', text)
+        text = re.sub(WHITESPACE_PATTERN, ' ', text).strip()
 
         if not text:
             raise ValueError("Text is empty after cleaning")
@@ -90,7 +95,7 @@ def clean_text(text):
         raise Exception(f"Failed to clean text: {str(e)}")
 
 
-def extract_text_from_txt(file):
+def extract_text_from_txt(file: Any) -> str:
     """
     Extract text from a TXT file.
 
@@ -111,16 +116,20 @@ def extract_text_from_txt(file):
         if not content:
             raise ValueError("TXT file is empty")
 
-        # Try UTF-8 first, fallback to other encodings
-        try:
-            text = content.decode("utf-8")
-        except UnicodeDecodeError:
-            logger.warning("UTF-8 decoding failed, trying latin-1")
+        # Try encodings in order of preference from config
+        text = None
+        for encoding in TEXT_ENCODINGS:
             try:
-                text = content.decode("latin-1")
+                text = content.decode(encoding)
+                logger.info(f"Successfully decoded with {encoding}")
+                break
             except UnicodeDecodeError:
-                logger.warning("latin-1 decoding failed, trying cp1252")
-                text = content.decode("cp1252", errors='ignore')
+                logger.warning(f"{encoding} decoding failed")
+                continue
+
+        # Fallback if all encodings fail
+        if text is None:
+            text = content.decode(TEXT_ENCODINGS[-1], errors='ignore')
 
         if not text.strip():
             raise ValueError("TXT file contains no readable text")
@@ -136,7 +145,7 @@ def extract_text_from_txt(file):
         raise Exception(f"Failed to process TXT file: {str(e)}")
 
 
-def get_embedding(text):
+def get_embedding(text: str) -> Any:
     """
     Generate embedding for text using the sentence transformer model.
 
@@ -173,7 +182,7 @@ def get_embedding(text):
         raise Exception(f"Failed to generate embedding: {str(e)}")
 
 
-def compute_similarity(text1, text2):
+def compute_similarity(text1: str, text2: str) -> float:
     """
     Compute semantic similarity between two texts.
 

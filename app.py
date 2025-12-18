@@ -1,33 +1,44 @@
-import streamlit as st
-from utils import extract_text_from_pdf, extract_text_from_txt, clean_text, compute_similarity
 import logging
+
+import streamlit as st
+
+from utils import extract_text_from_pdf, extract_text_from_txt, clean_text, compute_similarity
+from config import (
+    PAGE_TITLE,
+    PAGE_ICON,
+    APP_TITLE,
+    APP_INSTRUCTION,
+    MAX_FILE_SIZE,
+    TEXT_PREVIEW_CHAR_LIMIT,
+    STRONG_MATCH_THRESHOLD,
+    MODERATE_MATCH_THRESHOLD,
+    ALLOWED_RESUME_TYPES,
+    ALLOWED_JD_TYPES,
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Set page config
-st.set_page_config(page_title="Resume ↔ JD Match Scorer", page_icon="🤖")
+st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
 
-st.title("🤖 Resume ↔ JD Match Scorer")
-st.write("Instruction: Upload a **resume** (PDF) and a **job description** (TXT) to get a semantic match score.")
+st.title(APP_TITLE)
+st.write(APP_INSTRUCTION)
 
 # Initialize session state for uploader key
 if 'uploader_key' not in st.session_state:
     st.session_state.uploader_key = 0
 
-# File size limit (in bytes) - 10MB
-MAX_FILE_SIZE = 10 * 1024 * 1024
-
 # File uploaders
 resume_file = st.file_uploader(
     "Upload Resume (PDF)",
-    type=["pdf"],
+    type=ALLOWED_RESUME_TYPES,
     key=f"resume_{st.session_state.uploader_key}"
 )
 jd_file = st.file_uploader(
     "Upload Job Description (TXT)",
-    type=["txt"],
+    type=ALLOWED_JD_TYPES,
     key=f"jd_{st.session_state.uploader_key}"
 )
 
@@ -115,10 +126,10 @@ if resume_file and jd_file:
         st.success(f"✅ Match Score: **{score}%**")
 
         # Provide contextual feedback
-        if score >= 70:
+        if score >= STRONG_MATCH_THRESHOLD:
             st.balloons()
             st.info("🎉 Strong match! The resume aligns well with the JD.")
-        elif score >= 50:
+        elif score >= MODERATE_MATCH_THRESHOLD:
             st.warning("⚠️ Moderate match — some skills may be missing.")
         else:
             st.error("⚡ Low match — significant gaps with the JD.")
@@ -127,7 +138,7 @@ if resume_file and jd_file:
         with st.expander("📄 View Extracted Resume Text (Preview)"):
             st.text_area(
                 "Resume Content",
-                resume_text_raw[:1000] + ("..." if len(resume_text_raw) > 1000 else ""),
+                resume_text_raw[:TEXT_PREVIEW_CHAR_LIMIT] + ("..." if len(resume_text_raw) > TEXT_PREVIEW_CHAR_LIMIT else ""),
                 height=200,
                 disabled=True
             )
@@ -135,7 +146,7 @@ if resume_file and jd_file:
         with st.expander("📋 View Extracted Job Description Text (Preview)"):
             st.text_area(
                 "Job Description Content",
-                jd_text_raw[:1000] + ("..." if len(jd_text_raw) > 1000 else ""),
+                jd_text_raw[:TEXT_PREVIEW_CHAR_LIMIT] + ("..." if len(jd_text_raw) > TEXT_PREVIEW_CHAR_LIMIT else ""),
                 height=200,
                 disabled=True
             )
